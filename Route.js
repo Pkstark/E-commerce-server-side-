@@ -9,7 +9,6 @@ const crypto = require('crypto');
 const Token = require('./models/Token');
 
 //sendmail
-
 rout.post("/forgetpass", async (req, res) => {
     try {
         const schema = Joi.object({ email: Joi.string().email().required() });
@@ -28,13 +27,10 @@ rout.post("/forgetpass", async (req, res) => {
             }).save();
         }
 
-        const link = `http://localhost:3000/resetpassword/${user._id}/${token.token}`;
+        const link = `${process.env.BASE_URL}/password-reset/${user._id}/${token.token}`;
         await sendEmail(user.email, "Password reset", link);
 
-        res.json({
-            message : "password reset link sent to your email account",
-            status : true
-        });
+        res.send("password reset link sent to your email account");
     } catch (error) {
         res.send("An error occured");
         console.log(error);
@@ -310,6 +306,79 @@ rout.get("/getdata" , (req,res,next) => {
         })
     })
 })
+
+
+//Admin Add User
+
+rout.post("/adduser" , async (req,res) => {
+    const User = PersonDetails.find({username : req.body.username}, async (err,data) => {
+        if(data){
+            const Getter = data
+            if(Getter == ""){
+                const Person = PersonDetails.find({email : req.body.email},async (err,edata) => {
+                    const Active = edata;
+                    if(Active == ""){
+                            const register = new PersonDetails({
+                            username : req.body.username,
+                            email : req.body.email,
+                            password : req.body.password
+                        })
+                        await register.save();
+                        res.json({
+                            message : "Registered Successfully ! please Login..."
+                        });
+                    }
+                    else{
+                        res.json({
+                            error : "email already exist ! Please use another mail Id"
+                        })
+                    }
+                })
+            }
+            else{
+                res.json({
+                    error : "Username Already exist ! Please use another mail Id"
+                })
+            }
+        }
+    })
+})
+
+//Delete user
+
+
+rout.post("/deluser" , async (req,res) => {
+    const deleteuserData = {username : req.body.username}
+
+    PersonDetails.findOneAndDelete(deleteuserData, (err,data) => {
+        if(err){
+            console.log(err);
+        }else{
+            res.json({
+                delete : "User Successfully Deleted!!!"
+            })
+        }
+    } )
+})
+
+//Admin update user
+
+rout.put("/updateuser/:id" , (req,res,next) => {
+    PersonDetails.findOneAndUpdate({_id : req.params.id},{
+        $set: {
+            username : req.body.username,
+            email: req.body.email
+        }
+    }).then((result) => {
+        res.json({
+            message : "successfully updateded"
+        })
+    }).catch((err) => {
+        res.json(err);
+    })
+})
+
+
 
 
 
