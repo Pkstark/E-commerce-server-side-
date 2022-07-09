@@ -4,9 +4,169 @@ const PersonDetails = require ('./Database');
 const ClientData = require ('./Mongoose');
 const Person = require('./AdminDB');
 const Joi = require('joi')
+const Mobile = require('./ImageDb');
+const Shirts = require('./Shirts');
+const Shoes = require('./Shoes');
 const sendEmail = require('./SendMail');
 const crypto = require('crypto');
 const Token = require('./models/Token');
+//storage Image
+
+
+//mobile items 
+
+rout.post("/mobile" , async (req,res) => {
+    const User = Mobile.find({mobilename : req.body.mobilename}, async (err,data) => {
+        if(data){
+            const Getter = data
+            if(Getter == ""){
+                const Pe = Mobile.find({mobileprize : req.body.mobileprize},async (err,edata) => {
+                    const Active = edata;
+                    if(Active == ""){
+                            const register = new Mobile({
+                            mobilename : req.body.mobilename,
+                            mobileprize : req.body.mobileprize,
+                        })
+                        await register.save();
+                        res.json({
+                            message : "Upload Successfully"
+                        });
+                    }
+                    else{
+                        res.json({
+                            error : " product prize already exist"
+                        })
+                    }
+                })
+            }
+            else{
+                res.json({
+                    error : "Brand name already exist"
+                })
+            }
+        }
+    })
+})
+
+//Shirt items
+
+rout.post("/shirt" , async (req,res) => {
+    const User = Shirts.find({shirtname : req.body.shirtname}, async (err,data) => {
+        if(data){
+            const Getter = data
+            if(Getter == ""){
+                const Pe = Shirts.find({shirtprize : req.body.shirtprize},async (err,edata) => {
+                    const Active = edata;
+                    if(Active == ""){
+                            const register = new Shirts({
+                            shirtname : req.body.shirtname,
+                            shirtprize : req.body.shirtprize,
+                        })
+                        await register.save();
+                        res.json({
+                            message : "Upload Successfully"
+                        });
+                    }
+                    else{
+                        res.json({
+                            error : " product prize already exist"
+                        })
+                    }
+                })
+            }
+            else{
+                res.json({
+                    error : "Brand name already exist"
+                })
+            }
+        }
+    })
+})
+
+// shoes item
+
+rout.post("/shoe" , async (req,res) => {
+    const User = Shoes.find({shoename : req.body.shoename}, async (err,data) => {
+        if(data){
+            const Getter = data
+            if(Getter == ""){
+                const Pe = Shoes.find({shoeprize : req.body.shoeprize},async (err,edata) => {
+                    const Active = edata;
+                    if(Active == ""){
+                            const register = new Shoes({
+                            shoename : req.body.shoename,
+                            shoeprize : req.body.shoeprize,
+                        })
+                        await register.save();
+                        res.json({
+                            message : "Upload Successfully"
+                        });
+                    }
+                    else{
+                        res.json({
+                            error : " product prize already exist"
+                        })
+                    }
+                })
+            }
+            else{
+                res.json({
+                    error : "Brand name already exist"
+                })
+            }
+        }
+    })
+})
+
+
+//mobile get data
+
+
+rout.get("/mobdata" , (req,res,next) => {
+    Mobile.find().then(result => {
+        res.status(200).json({
+            data : result
+        });
+    }).catch(err => {
+        console.log(err);
+        res.status(500).json({
+            error:err
+        })
+    })
+})
+
+
+// shirt get data
+
+
+rout.get("/shirtdata" , (req,res,next) => {
+    Shirts.find().then(result => {
+        res.status(200).json({
+            data : result
+        });
+    }).catch(err => {
+        console.log(err);
+        res.status(500).json({
+            error:err
+        })
+    })
+})
+
+//shoe data
+
+
+rout.get("/shoedata" , (req,res,next) => {
+    Shoes.find().then(result => {
+        res.status(200).json({
+            data : result
+        });
+    }).catch(err => {
+        console.log(err);
+        res.status(500).json({
+            error:err
+        })
+    })
+})
 
 //sendmail
 rout.post("/forgetpass", async (req, res) => {
@@ -364,9 +524,8 @@ rout.post("/deluser" , async (req,res) => {
 //Admin update user
 
 rout.put("/updateuser/:id" , (req,res,next) => {
-    PersonDetails.findOneAndUpdate({_id : req.params.id},{
+    PersonDetails.findOneAndUpdate({username : req.params.id},{
         $set: {
-            username : req.body.username,
             email: req.body.email
         }
     }).then((result) => {
