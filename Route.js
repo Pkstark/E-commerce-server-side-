@@ -177,22 +177,29 @@ rout.post("/forgetpass", async (req, res) => {
 
         const user = await PersonDetails.findOne({ email: req.body.email });
         if (!user)
-            return res.status(400).send("user with given email doesn't exist");
+            return res.json({
+                message : "user email id not work"
+            })
 
-        let token = await Token.findOne({ userId: user._id });
+        let token = await Token.findOne({ userId: user.username });
         if (!token) {
             token = await new Token({
-                userId: user._id,
+                userId: user.username,
                 token: crypto.randomBytes(32).toString("hex"),
             }).save();
         }
 
-        const link = `${process.env.BASE_URL}/password-reset/${user._id}/${token.token}`;
+        const link = `http://localhost:3000/resetpassword/${user.username}/${token.token}`;
         await sendEmail(user.email, "Password reset", link);
 
-        res.send("password reset link sent to your email account");
+        res.json({
+            status : true,
+            message : " password reset link send your email account"
+        })
     } catch (error) {
-        res.send("An error occured");
+        res.json({
+            message : "An error occuried"
+        });
         console.log(error);
     }
 });
@@ -203,22 +210,32 @@ rout.post("/resetpassword/:userId/:token", async (req, res) => {
         const { error } = schema.validate(req.body);
         if (error) return res.status(400).send(error.details[0].message);
 
-        const user = await PersonDetails.findById(req.params.userId);
-        if (!user) return res.status(400).send("invalid link or expired");
+        const user = await PersonDetails.findOneAndUpdate(req.params.userId);
+        if (!user) return res.status(400).json({
+            message : "invaliad link or expired"
+        });
 
         const token = await Token.findOne({
-            userId: user._id,
+            userId: user.username,
             token: req.params.token,
         });
-        if (!token) return res.status(400).send("Invalid link or expired");
-
+        if (!token) return res.status(400).json({
+            message : "Invalid link or expired"
+        });
+        
         user.password = req.body.password;
         await user.save();
         await token.delete();
 
-        res.send("password reset sucessfully.");
+        res.json({
+            status : true,
+            message : "password reset successfully"
+        });
     } catch (error) {
-        res.send("An error occured");
+        res.json({
+            status : false,
+            message : "An error occured"
+        });
         console.log(error);
     }
 });

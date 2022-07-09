@@ -3,9 +3,8 @@ const Schema = mongoose.Schema;
 
 const tokenSchema = new Schema({
     userId: {
-        type: Schema.Types.ObjectId,
+        type: String,
         required: true,
-        ref: "user",
     },
     token: {
         type: String,
@@ -14,7 +13,7 @@ const tokenSchema = new Schema({
     createdAt: {
         type: Date,
         default: Date.now,
-        expires: 3600,
+        expires: 1600,
     },
 });
 
