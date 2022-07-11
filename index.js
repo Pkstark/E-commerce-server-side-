@@ -24,6 +24,6 @@ app.use(bodyparser.urlencoded({
     extended:true,
 }))
 
-
+app.use('/uploads', express.static('./uploads'));
 
 app.listen(8000,()=> console.log("Port started successfully"));

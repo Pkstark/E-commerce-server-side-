@@ -1,12 +1,23 @@
-const mongoose = require('mongoose');
+const mongoose = require ('mongoose');
 
-const put = mongoose.Schema;
+const Schema = mongoose.Schema;
 
-const huser = new put ({
-    mobilename : String,
-    mobileprize : String
+const userSchema = new Schema({
+    name : {
+        type : String,
+        required : true,
+        trim : true
+    },
+    prize : {
+        type : String,
+        required : true
+    },
+    photo : {
+        type : String,
+        require : true
+    }
 })
 
-const Mobile = mongoose.model("mobile", huser);
+const Product = mongoose.model("Images",userSchema);
 
-module.exports = Mobile;
+module.exports = Product;

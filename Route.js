@@ -4,169 +4,229 @@ const PersonDetails = require ('./Database');
 const ClientData = require ('./Mongoose');
 const Person = require('./AdminDB');
 const Joi = require('joi')
-const Mobile = require('./ImageDb');
 const Shirts = require('./Shirts');
 const Shoes = require('./Shoes');
 const sendEmail = require('./SendMail');
 const crypto = require('crypto');
 const Token = require('./models/Token');
+const Product = require('./ImageDb');
+const path = require('path');
+const multer = require('multer');
+const Mobile = require('./Mobile');
+
+
+
+rout.get("/dd" , (req,res,next) => {
+    PersonDetails.find().then((result) => res.json(result)).catch((err) => res.json(err))
+})
+
+
 //storage Image
 
+const Storage = multer.diskStorage({
+    destination : (req,res,cb) => {
+        cb(null, 'uploads')
+    },
+    filename : (req,file,cb) => {
+        cb(null, file.originalname);
+    }
+    
+});
 
-//mobile items 
 
-rout.post("/mobile" , async (req,res) => {
-    const User = Mobile.find({mobilename : req.body.mobilename}, async (err,data) => {
-        if(data){
-            const Getter = data
-            if(Getter == ""){
-                const Pe = Mobile.find({mobileprize : req.body.mobileprize},async (err,edata) => {
-                    const Active = edata;
-                    if(Active == ""){
-                            const register = new Mobile({
-                            mobilename : req.body.mobilename,
-                            mobileprize : req.body.mobileprize,
-                        })
-                        await register.save();
-                        res.json({
-                            message : "Upload Successfully"
-                        });
-                    }
-                    else{
-                        res.json({
-                            error : " product prize already exist"
-                        })
-                    }
-                })
-            }
-            else{
-                res.json({
-                    error : "Brand name already exist"
-                })
-            }
-        }
-    })
+// const fileFilter = (req,file,cb) => {
+//     const allowedType = ["image/jpeg" , "image/png" , "image/jpg"];
+//     if(allowedType.includes(file.mimetype)) {
+//         cb(null,true)
+//     }
+//     else {
+//         cb(null,false)
+//     }
+// }
+
+const upload = multer({storage : Storage});
+
+
+//Mobile routes 
+
+
+rout.post ('/productupload' , upload.single("photo") ,(req,res) => {
+    const name = req.body.name;
+    const prize = req.body.prize;
+    const photo = req.file.path
+
+    const newUserData = {
+        name,
+        prize,
+        photo
+    }
+
+    const newProduct = new Product(newUserData);
+
+    newProduct.save()
+    .then(() => res.json({
+        message : "Product added Successfully"
+    }))
+    .catch((err) => res.json("error" + err))
 })
 
-//Shirt items
 
-rout.post("/shirt" , async (req,res) => {
-    const User = Shirts.find({shirtname : req.body.shirtname}, async (err,data) => {
-        if(data){
-            const Getter = data
-            if(Getter == ""){
-                const Pe = Shirts.find({shirtprize : req.body.shirtprize},async (err,edata) => {
-                    const Active = edata;
-                    if(Active == ""){
-                            const register = new Shirts({
-                            shirtname : req.body.shirtname,
-                            shirtprize : req.body.shirtprize,
-                        })
-                        await register.save();
-                        res.json({
-                            message : "Upload Successfully"
-                        });
-                    }
-                    else{
-                        res.json({
-                            error : " product prize already exist"
-                        })
-                    }
-                })
-            }
-            else{
-                res.json({
-                    error : "Brand name already exist"
-                })
-            }
-        }
-    })
+
+//Shirts items 
+rout.post ('/Shirts' , upload.single("photo") ,(req,res) => {
+    const name = req.body.name;
+    const prize = req.body.prize;
+    const photo = req.file.path
+
+    const newUserData = {
+        name,
+        prize,
+        photo
+    }
+
+    const newProduct = new Shirts(newUserData);
+
+    newProduct.save()
+    .then(() => res.json({
+        message : "Product added Successfully"
+    }))
+    .catch((err) => res.json("error" + err))
 })
 
-// shoes item
 
-rout.post("/shoe" , async (req,res) => {
-    const User = Shoes.find({shoename : req.body.shoename}, async (err,data) => {
-        if(data){
-            const Getter = data
-            if(Getter == ""){
-                const Pe = Shoes.find({shoeprize : req.body.shoeprize},async (err,edata) => {
-                    const Active = edata;
-                    if(Active == ""){
-                            const register = new Shoes({
-                            shoename : req.body.shoename,
-                            shoeprize : req.body.shoeprize,
-                        })
-                        await register.save();
-                        res.json({
-                            message : "Upload Successfully"
-                        });
-                    }
-                    else{
-                        res.json({
-                            error : " product prize already exist"
-                        })
-                    }
-                })
-            }
-            else{
-                res.json({
-                    error : "Brand name already exist"
-                })
-            }
-        }
-    })
+//shoe items
+
+rout.post ('/shoe' , upload.single("photo") ,(req,res) => {
+    const name = req.body.name;
+    const prize = req.body.prize;
+    const photo = req.file.path
+
+    const newUserData = {
+        name,
+        prize,
+        photo
+    }
+
+    const newProduct = new Shoes(newUserData);
+
+    newProduct.save()
+    .then(() => res.json({
+        message : "Product added Successfully"
+    }))
+    .catch((err) => res.json("error" + err))
 })
-
 
 //mobile get data
-
-
-rout.get("/mobdata" , (req,res,next) => {
-    Mobile.find().then(result => {
-        res.status(200).json({
-            data : result
-        });
-    }).catch(err => {
-        console.log(err);
-        res.status(500).json({
-            error:err
-        })
-    })
+rout.get("/data" , (req,res,next) => {
+    Product.find().then((result) => res.json(result)).catch((err) => res.json(err))
 })
 
 
 // shirt get data
 
-
-rout.get("/shirtdata" , (req,res,next) => {
-    Shirts.find().then(result => {
-        res.status(200).json({
-            data : result
-        });
-    }).catch(err => {
-        console.log(err);
-        res.status(500).json({
-            error:err
-        })
-    })
+rout.get("/sdata" , (req,res,next) => {
+    Shirts.find().then((result) => res.json(result)).catch((err) => res.json(err))
 })
 
 //shoe data
 
+rout.get("/shdata" , (req,res,next) => {
+    Shoes.find().then((result) => res.json(result)).catch((err) => res.json(err))
+})
 
-rout.get("/shoedata" , (req,res,next) => {
-    Shoes.find().then(result => {
-        res.status(200).json({
-            data : result
-        });
-    }).catch(err => {
-        console.log(err);
-        res.status(500).json({
-            error:err
+
+// delete Product
+
+
+rout.post("/productdel/:id" ,async (req, res) => {
+    try {
+      await Product.findByIdAndDelete(req.params.id);
+      res.status(200).json("Product has been deleted.");
+    } catch (err) {
+      console.log(err);
+    }
+  })
+
+  //delete shoes
+
+  
+rout.post("/shoedel/:id" ,async (req, res) => {
+    try {
+      await Shoes.findByIdAndDelete(req.params.id);
+      res.status(200).json("Product has been deleted.");
+    } catch (err) {
+      console.log(err);
+    }
+  })
+
+//shirt delete
+  
+rout.post("/shirtdel/:id" ,async (req, res) => {
+    try {
+      await Shirts.findByIdAndDelete(req.params.id);
+      res.status(200).json("Product has been deleted.");
+    } catch (err) {
+      console.log(err);
+    }
+  })
+
+
+  //update mobile
+
+  
+rout.put("/mobileup/:id" ,(req,res,next) => {
+    Product.findByIdAndUpdate({_id : req.params.id},{
+        $set: {
+            name : req.body.name,
+            prize : req.body.prize
+        }
+    }).then((result) => {
+        res.json({
+            message : "successfully updateded"
         })
+    }).catch((err) => {
+        res.json(err);
     })
 })
+
+
+//update shoe
+
+rout.put("/shoeup/:id" ,(req,res,next) => {
+    Shoes.findByIdAndUpdate({_id : req.params.id},{
+        $set: {
+            name : req.body.name,
+            prize : req.body.prize
+        }
+    }).then((result) => {
+        res.json({
+            message : "successfully updateded"
+        })
+    }).catch((err) => {
+        res.json(err);
+    })
+})
+
+
+//shirt update
+
+
+rout.put("/shirtup/:id" ,(req,res,next) => {
+    Shirts.findByIdAndUpdate({_id : req.params.id},{
+        $set: {
+            name : req.body.name,
+            prize : req.body.prize
+        }
+    }).then((result) => {
+        res.json({
+            message : "successfully updateded"
+        })
+    }).catch((err) => {
+        res.json(err);
+    })
+})
+
+
 
 //sendmail
 rout.post("/forgetpass", async (req, res) => {
