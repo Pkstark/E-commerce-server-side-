@@ -3,7 +3,7 @@ const rout = express.Router("");
 const PersonDetails = require ('./Database');
 const ClientData = require ('./Mongoose');
 const Person = require('./AdminDB');
-const Joi = require('joi')
+const Joi = require('joi');
 const Shirts = require('./Shirts');
 const Shoes = require('./Shoes');
 const sendEmail = require('./SendMail');
@@ -13,7 +13,8 @@ const Product = require('./ImageDb');
 const path = require('path');
 const multer = require('multer');
 const Mobile = require('./Mobile');
-
+const Cart = require('./Card');
+const Paymont = require('./paymont');
 
 
 rout.get("/dd" , (req,res,next) => {
@@ -121,7 +122,6 @@ rout.get("/data" , (req,res,next) => {
     Product.find().then((result) => res.json(result)).catch((err) => res.json(err))
 })
 
-
 // shirt get data
 
 rout.get("/sdata" , (req,res,next) => {
@@ -223,6 +223,139 @@ rout.put("/shirtup/:id" ,(req,res,next) => {
         })
     }).catch((err) => {
         res.json(err);
+    })
+})
+
+
+//Add to Cart
+
+rout.post('/addcart/:id' , async (req, res) => {
+    try {
+      const List = new Cart({
+        username : req.body.username,
+        name : req.body.name,
+        prize : req.body.prize,
+        photo : req.body.photo
+      });
+      const createData = await List.save();
+      if (createData) {
+        res.send({
+          message: "added to cart",
+          createData,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  })
+
+
+  // cart Shirt
+
+  rout.post('/addcartsh/:id' ,async (req, res) => {
+    try {
+      const List = new Cart({
+        username : req.body.username,
+        name : req.body.name,
+        prize : req.body.prize,
+        photo : req.body.photo
+      });
+      const createData = await List.save();
+      if (createData) {
+        res.send({
+          message: "added to cart",
+          createData,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  })
+
+
+  // cart Shoe
+
+  rout.post('/addcartshoe/:id' , async (req, res) => {
+    try {
+      const List = new Cart({
+        username : req.body.username,
+        name : req.body.name,
+        prize : req.body.prize,
+        photo : req.body.photo
+      });
+      const createData = await List.save();
+      if (createData) {
+        res.send({
+          message: "added to cart",
+          createData,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  })
+
+  //get card
+
+rout.post("/cartdata" , async (req,res) => {
+    const HuserData = Cart.find({username : req.body.username}, async (err,data) => {
+        if(data){
+            res.json(data)
+        }else{
+            res.json("Something Wrong")
+        }
+    })
+})
+
+// client Order
+
+rout.post("/orderdata" , async (req,res) => {
+    const HuserData = Paymont.find({username : req.body.username}, async (err,data) => {
+        if(data){
+            res.json(data)
+        }else{
+            res.json("Something Wrong")
+        }
+    })
+})
+
+// Client Order Cancel
+
+rout.post("/orderdel/:id" ,async (req, res) => {
+    try {
+      await Paymont.findByIdAndDelete(req.params.id);
+      res.status(200).json("Order has been deleted.");
+    } catch (err) {
+      console.log(err);
+    }
+  })
+
+//delete cart
+
+rout.post("/cartdel/:id" ,async (req, res) => {
+    try {
+      await Cart.findByIdAndDelete(req.params.id);
+      res.status(200).json("Product has been deleted.");
+    } catch (err) {
+      console.log(err);
+    }
+  })
+
+// payment
+
+
+rout.post("/payment" , async (req,res) => {
+    const Added = new  Paymont({
+        username : req.body.username,
+        name : req.body.name,
+        prize : req.body.prize,
+        photo : req.body.photo,
+        paid : "Paid",
+        Approved : "Order Approved"
+    })
+    await Added.save();
+    res.json({
+        message : "Paymont Successfully!!!"
     })
 })
 
@@ -614,8 +747,24 @@ rout.put("/updateuser/:id" , (req,res,next) => {
     })
 })
 
+//Admin View Client Orders
 
 
+rout.get("/adminclientdata" , (req,res,next) => {
+    Paymont.find().then((result) => res.json(result)).catch((err) => res.json(err))
+})
+
+
+//Admin Order cancel
+
+rout.post("/adminordercancel/:id" ,async (req, res) => {
+    try {
+      await Paymont.findByIdAndDelete(req.params.id);
+      res.status(200).json("Product has been deleted.");
+    } catch (err) {
+      console.log(err);
+    }
+  })
 
 
 module.exports = rout;
