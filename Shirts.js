@@ -2,19 +2,19 @@ const mongoose = require('mongoose');
 
 const put = mongoose.Schema;
 
-const huser = new put ({
-    name : {
-        type : String,
-        required : true,
-        trim : true
+const huser = new put({
+    name: {
+        type: String,
+        required: true,
+        trim: true
     },
-    prize : {
-        type : String,
-        required : true
+    prize: {
+        type: String,
+        required: true
     },
-    photo : {
-        type : String,
-        require : true
+    photo: {
+        type: String,
+        require: true
     }
 })
 
