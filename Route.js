@@ -54,11 +54,13 @@ const upload = multer({ storage: Storage });
 rout.post('/productupload', upload.single("photo"), (req, res) => {
     const name = req.body.name;
     const prize = req.body.prize;
+    const offerprize = req.body.offerprize;
     const photo = req.file.path
 
     const newUserData = {
         name,
         prize,
+        offerprize,
         photo
     }
 
@@ -77,11 +79,13 @@ rout.post('/productupload', upload.single("photo"), (req, res) => {
 rout.post('/Shirts', upload.single("photo"), (req, res) => {
     const name = req.body.name;
     const prize = req.body.prize;
+    const offerprize = req.body.offerprize;
     const photo = req.file.path
 
     const newUserData = {
         name,
         prize,
+        offerprize,
         photo
     }
 
@@ -100,11 +104,13 @@ rout.post('/Shirts', upload.single("photo"), (req, res) => {
 rout.post('/shoe', upload.single("photo"), (req, res) => {
     const name = req.body.name;
     const prize = req.body.prize;
+    const offerprize = req.body.offerprize;
     const photo = req.file.path
 
     const newUserData = {
         name,
         prize,
+        offerprize,
         photo
     }
 
@@ -178,7 +184,8 @@ rout.put("/mobileup/:id", (req, res, next) => {
     Product.findByIdAndUpdate({ _id: req.params.id }, {
         $set: {
             name: req.body.name,
-            prize: req.body.prize
+            prize: req.body.prize,
+            offerprize : req.body.offerprize
         }
     }).then((result) => {
         res.json({
@@ -196,7 +203,8 @@ rout.put("/shoeup/:id", (req, res, next) => {
     Shoes.findByIdAndUpdate({ _id: req.params.id }, {
         $set: {
             name: req.body.name,
-            prize: req.body.prize
+            prize: req.body.prize,
+            offerprize : req.body.offerprize
         }
     }).then((result) => {
         res.json({
@@ -215,7 +223,8 @@ rout.put("/shirtup/:id", (req, res, next) => {
     Shirts.findByIdAndUpdate({ _id: req.params.id }, {
         $set: {
             name: req.body.name,
-            prize: req.body.prize
+            prize: req.body.prize,             
+            offerprize : req.body.offerprize
         }
     }).then((result) => {
         res.json({
@@ -235,6 +244,7 @@ rout.post('/addcart/:id', async (req, res) => {
             username: req.body.username,
             name: req.body.name,
             prize: req.body.prize,
+            offerprize : req.body.offerprize,
             photo: req.body.photo
         });
         const createData = await List.save();
@@ -258,6 +268,7 @@ rout.post('/addcartsh/:id', async (req, res) => {
             username: req.body.username,
             name: req.body.name,
             prize: req.body.prize,
+            offerprize : req.body.offerprize,
             photo: req.body.photo
         });
         const createData = await List.save();
@@ -281,6 +292,7 @@ rout.post('/addcartshoe/:id', async (req, res) => {
             username: req.body.username,
             name: req.body.name,
             prize: req.body.prize,
+            offerprize : req.body.offerprize,
             photo: req.body.photo
         });
         const createData = await List.save();
@@ -350,6 +362,7 @@ rout.post("/payment", async (req, res) => {
         name: req.body.name,
         prize: req.body.prize,
         photo: req.body.photo,
+        offerprize : req.body.offerprize,
         paid: "Paid",
         Approved: "Order Approved"
     })

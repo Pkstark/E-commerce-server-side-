@@ -12,6 +12,10 @@ const huser = new put({
         type: String,
         required: true
     },
+    offerprize : {
+        type : String,
+        required : true
+    },
     photo: {
         type: String,
         require: true

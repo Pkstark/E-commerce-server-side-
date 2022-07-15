@@ -8,6 +8,7 @@ const clientDetail = new CDatas({
     name: String,
     prize: String,
     photo: String,
+    offerprize : String,
     paid: String,
     Approved: String,
 });

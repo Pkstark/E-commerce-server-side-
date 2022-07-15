@@ -16,6 +16,10 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
+    offerprize : {
+        type : String,
+        require : true
+    },
     photo: {
         type: String,
         require: true
