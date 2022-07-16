@@ -364,7 +364,9 @@ rout.post("/payment", async (req, res) => {
         photo: req.body.photo,
         offerprize : req.body.offerprize,
         paid: "Paid",
-        Approved: "Order Approved"
+        Approved: "Order Approved",
+        quantity : req.body.quantity,
+        totalprize : req.body.quantity * req.body.offerprize
     })
     await Added.save();
     res.json({

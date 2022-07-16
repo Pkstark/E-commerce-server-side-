@@ -11,6 +11,13 @@ const clientDetail = new CDatas({
     offerprize : String,
     paid: String,
     Approved: String,
+    quantity : {
+        type : Number,
+        require : true
+    },
+    totalprize : {
+        type : Number
+    }
 });
 
 const Paymont = mongoose.model("paymont", clientDetail);

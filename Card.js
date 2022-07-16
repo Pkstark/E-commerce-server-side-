@@ -23,6 +23,10 @@ const userSchema = new Schema({
     photo: {
         type: String,
         require: true
+    },
+    quantity : {
+        type : String,
+        require : true
     }
 })
 
