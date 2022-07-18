@@ -17,6 +17,12 @@ const clientDetail = new CDatas({
     },
     totalprize : {
         type : Number
+    },
+    shipping : {
+        type : String
+    },
+    discount : {
+        type : String
     }
 });
 

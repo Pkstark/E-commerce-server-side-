@@ -27,6 +27,9 @@ const userSchema = new Schema({
     quantity : {
         type : String,
         require : true
+    },
+    discount : {
+        type : String
     }
 })
 

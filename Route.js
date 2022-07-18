@@ -55,13 +55,19 @@ rout.post('/productupload', upload.single("photo"), (req, res) => {
     const name = req.body.name;
     const prize = req.body.prize;
     const offerprize = req.body.offerprize;
-    const photo = req.file.path
+    const photo = req.file.path;
+    const availability = req.body.availability;
+    const stock1 = "Instock";
+    const stock2 = "Outofstock";
 
     const newUserData = {
         name,
         prize,
         offerprize,
-        photo
+        photo,
+        availability,
+        stock1,
+        stock2
     }
 
     const newProduct = new Product(newUserData);
@@ -80,13 +86,19 @@ rout.post('/Shirts', upload.single("photo"), (req, res) => {
     const name = req.body.name;
     const prize = req.body.prize;
     const offerprize = req.body.offerprize;
-    const photo = req.file.path
+    const photo = req.file.path;
+    const availability = req.body.availability;
+    const stock1 = "Instock";
+    const stock2 = "Outofstock";
 
     const newUserData = {
         name,
         prize,
         offerprize,
-        photo
+        photo,
+        availability,
+        stock1,
+        stock2
     }
 
     const newProduct = new Shirts(newUserData);
@@ -105,13 +117,19 @@ rout.post('/shoe', upload.single("photo"), (req, res) => {
     const name = req.body.name;
     const prize = req.body.prize;
     const offerprize = req.body.offerprize;
-    const photo = req.file.path
+    const photo = req.file.path;
+    const availability = req.body.availability;
+    const stock1 = "Instock";
+    const stock2 = "Outofstock";
 
     const newUserData = {
         name,
         prize,
         offerprize,
-        photo
+        photo,
+        availability,
+        stock1,
+        stock2
     }
 
     const newProduct = new Shoes(newUserData);
@@ -185,7 +203,8 @@ rout.put("/mobileup/:id", (req, res, next) => {
         $set: {
             name: req.body.name,
             prize: req.body.prize,
-            offerprize : req.body.offerprize
+            offerprize : req.body.offerprize,
+            availability : req.body.availability
         }
     }).then((result) => {
         res.json({
@@ -204,7 +223,8 @@ rout.put("/shoeup/:id", (req, res, next) => {
         $set: {
             name: req.body.name,
             prize: req.body.prize,
-            offerprize : req.body.offerprize
+            offerprize : req.body.offerprize,
+            availability : req.body.availability
         }
     }).then((result) => {
         res.json({
@@ -224,7 +244,8 @@ rout.put("/shirtup/:id", (req, res, next) => {
         $set: {
             name: req.body.name,
             prize: req.body.prize,             
-            offerprize : req.body.offerprize
+            offerprize : req.body.offerprize,
+            availability : req.body.availability
         }
     }).then((result) => {
         res.json({
@@ -245,7 +266,8 @@ rout.post('/addcart/:id', async (req, res) => {
             name: req.body.name,
             prize: req.body.prize,
             offerprize : req.body.offerprize,
-            photo: req.body.photo
+            photo: req.body.photo,
+            discount : Math.floor(Math.random()*90 + 10)
         });
         const createData = await List.save();
         if (createData) {
@@ -269,7 +291,8 @@ rout.post('/addcartsh/:id', async (req, res) => {
             name: req.body.name,
             prize: req.body.prize,
             offerprize : req.body.offerprize,
-            photo: req.body.photo
+            photo: req.body.photo,
+            discount : Math.floor(Math.random()*90 + 10)
         });
         const createData = await List.save();
         if (createData) {
@@ -293,7 +316,8 @@ rout.post('/addcartshoe/:id', async (req, res) => {
             name: req.body.name,
             prize: req.body.prize,
             offerprize : req.body.offerprize,
-            photo: req.body.photo
+            photo: req.body.photo,
+            discount : Math.floor(Math.random()*90 + 10)
         });
         const createData = await List.save();
         if (createData) {
@@ -364,9 +388,11 @@ rout.post("/payment", async (req, res) => {
         photo: req.body.photo,
         offerprize : req.body.offerprize,
         paid: "Paid",
-        Approved: "Order Approved",
+        Approved: "Order Placed",
+        shipping : Math.floor((Math.random()*9) + 1),
         quantity : req.body.quantity,
-        totalprize : req.body.quantity * req.body.offerprize
+        totalprize : req.body.quantity * req.body.offerprize,
+        discount : req.body.discount
     })
     await Added.save();
     res.json({

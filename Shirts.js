@@ -19,6 +19,20 @@ const huser = new put({
     photo: {
         type: String,
         require: true
+    },
+    stock1 : {
+        type : String,
+        require : true
+    },
+    stock2 : {
+        type : String,
+        require:true
+    },
+    availability : {
+        type : Boolean
+    },
+    discount : {
+        type : String
     }
 })
 
