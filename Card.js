@@ -30,6 +30,9 @@ const userSchema = new Schema({
     },
     discount : {
         type : String
+    },
+    totalprize: {
+        type : String
     }
 })
 

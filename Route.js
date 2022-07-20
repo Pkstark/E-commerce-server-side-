@@ -15,6 +15,9 @@ const multer = require('multer');
 const Mobile = require('./Mobile');
 const Cart = require('./Card');
 const Paymont = require('./paymont');
+const Address = require('./Address');
+const { count, find } = require('./Database');
+const Overall = require('./Overalldetail');
 
 
 rout.get("/dd", (req, res, next) => {
@@ -267,7 +270,7 @@ rout.post('/addcart/:id', async (req, res) => {
             prize: req.body.prize,
             offerprize : req.body.offerprize,
             photo: req.body.photo,
-            discount : Math.floor(Math.random()*90 + 10)
+            discount : Math.floor(Math.random()*90 + 10),
         });
         const createData = await List.save();
         if (createData) {
@@ -806,6 +809,137 @@ rout.post("/adminordercancel/:id", async (req, res) => {
         console.log(err);
     }
 })
+
+
+//Address Added
+
+rout.post('/address',(req, res) => {
+    
+    const username = req.body.username;
+    const mobile = req.body.mobile;
+    const flatno = req.body.flatno;
+    const address1 = req.body.address1;
+    const address2 = req.body.address2;
+    const city = req.body.city;
+    const state = req.body.state;
+    const pincode = req.body.pincode;
+    const limit = 0
+
+    const newUserData = {
+        username,
+        mobile,
+        flatno,
+        address1,
+        address2,
+        city,
+        state,
+        pincode,
+        limit
+    }
+    const addressAdd = new Address(newUserData);
+
+    addressAdd.save()
+        .then(() => res.json({
+            message: "Address added Successfully"
+        }))
+        .catch((err) => res.json("error" + err))
+})
+//add data
+
+// rout.post("/addr",(req,res) => {
+//     let limit = 3;
+//     for(let i = 0 ; i<=3;i++){
+//         const data = {
+//             limit
+//         }
+//     }
+
+// })
+
+//Address get Data
+
+rout.post("/getaddress", async (req, res) => {
+    const HuserData = Address.find({ username: req.body.username }, async (err, data) => {
+        if (data) {
+            res.json(data)
+        } else {
+            res.json("Something Wrong")
+        }
+    })
+})
+
+
+//user Address Deleted
+
+rout.post("/addressdel/:id", async (req, res) => {
+    try {
+        await Address.findByIdAndDelete(req.params.id);
+        res.status(200).json("Address has been deleted.");
+    } catch (err) {
+        console.log(err);
+    }
+})
+
+
+
+// Address Updated
+
+
+rout.put("/addessup/:id", (req, res, next) => {
+    Address.findByIdAndUpdate({ _id: req.params.id }, {
+        $set: {
+             mobile : req.body.mobile,
+             flatno : req.body.flatno,
+             address1 : req.body.address1,
+             address2 : req.body.address2,
+             city : req.body.city,
+             state : req.body.state,
+             pincode : req.body.pincode,
+        }
+    }).then((result) => {
+        res.json({
+            message: "Address successfully updateded"
+        })
+    }).catch((err) => {
+        res.json(err);
+    })
+})
+
+//Overall Data 
+
+
+
+rout.post("/overall", async (req, res) => {
+    const Added = new Overall({
+        username: req.body.username,
+        name: req.body.name,
+        prize: req.body.prize,
+        photo: req.body.photo,
+        offerprize : req.body.offerprize,
+        paid: "Paid",
+        Approved: "Order Placed",
+        shipping : Math.floor((Math.random()*9) + 1),
+        quantity : req.body.quantity,
+        totalprize : req.body.quantity * req.body.offerprize,
+        discount : req.body.discount,
+        flatno : req.body.flatno,
+        address1 : req.body.address1,
+        address2 : req.body.address2,
+        city : req.body.city,
+        state : req.body.state, 
+        pincode : req.body.pincode,
+        mobile : req.body.mobile
+    })
+
+    await Added.save();
+    res.json({ 
+        message: "Paymont Successfully!!!"
+    })
+})
+
+//get overall data
+
+
 
 
 module.exports = rout;
