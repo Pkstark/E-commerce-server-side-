@@ -926,7 +926,7 @@ rout.post("/overall", async (req, res) => {
         address1 : req.body.address1,
         address2 : req.body.address2,
         city : req.body.city,
-        state : req.body.state, 
+        state : req.body.state,
         pincode : req.body.pincode,
         mobile : req.body.mobile
     })
@@ -939,7 +939,50 @@ rout.post("/overall", async (req, res) => {
 
 //get overall data
 
+rout.post("/overalldata", async (req, res) => {
+    const HuserData = Overall.find({ username: req.body.username }, async (err, data) => {
+        if (data) {
+            res.json(data)
+        } else {
+            res.json("Something Wrong")
+        }
+    })
+})
 
+// overall data delete
+
+
+rout.post("/addressdel/:id", async (req, res) => {
+    try {
+        await Overall.findByIdAndDelete(req.params.id);
+        res.status(200).json("Address has been deleted.");
+    } catch (err) {
+        console.log(err);
+    }
+})
+
+// delete order
+
+rout.post("/overdel/:id", async (req, res) => {
+    try {
+        await Overall.findByIdAndDelete(req.params.id);
+        res.status(200).json("Address has been deleted.");
+    } catch (err) {
+        console.log(err);
+    }
+})
+
+
+rout.get("/orderdatas/:id", (req, res, next) => {
+    Paymont.findById(req.params.id).then((result) => res.json(result)).catch((err) => res.json(err))
+})
+
+
+// admin order data
+
+rout.get("/overdataadmin", (req, res, next) => {
+    Overall.find().then((result) => res.json(result)).catch((err) => res.json(err))
+})
 
 
 module.exports = rout;

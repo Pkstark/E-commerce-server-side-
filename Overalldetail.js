@@ -67,7 +67,15 @@ const clientDetail = new CDatas({
     },
     totalprize : {
         type : String,
-        requiree : true
+        required : true
+    },
+    discount : {
+        type : String,
+        required : true
+    },
+    shipping : {
+        type : String,
+        required : true
     }
 });
 
