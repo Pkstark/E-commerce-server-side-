@@ -823,7 +823,8 @@ rout.post('/address',(req, res) => {
     const city = req.body.city;
     const state = req.body.state;
     const pincode = req.body.pincode;
-    const limit = 0
+    const limit = 0;
+    const select = req.body.select;
 
     const newUserData = {
         username,
@@ -834,7 +835,8 @@ rout.post('/address',(req, res) => {
         city,
         state,
         pincode,
-        limit
+        limit,
+        select
     }
     const addressAdd = new Address(newUserData);
 
@@ -974,7 +976,7 @@ rout.post("/overdel/:id", async (req, res) => {
 
 
 rout.get("/orderdatas/:id", (req, res, next) => {
-    Paymont.findById(req.params.id).then((result) => res.json(result)).catch((err) => res.json(err))
+    Overall.findById(req.params.id).then((result) => res.json(result)).catch((err) => res.json(err))
 })
 
 

@@ -36,6 +36,10 @@ const clientDetail = new CDatas({
     limit : {
         type : Number,
         default : 0
+    },
+    select : {
+        type : Boolean,
+        default :true
     }
 });
 
