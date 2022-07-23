@@ -987,4 +987,92 @@ rout.get("/overdataadmin", (req, res, next) => {
 })
 
 
+// get data in queries
+
+
+rout.get("/h",async(req,res) => {
+    const result =await Cart.find();
+    res.json(result);
+})
+
+rout.get("/h1",async(req,res) => {
+    const result =await Cart.find({name : "iphone"});
+    res.json(result);
+})
+
+rout.get("/h2",async(req,res) => {
+    const result =await Cart.find({name : "jio"});
+    res.json(result);
+})
+
+rout.get("/h3",async(req,res) => {
+    const result =await Cart.find({name : "toctoc"});
+    res.json(result);
+})
+
+//Queries find comparision operator
+
+
+rout.get("/g",async (req,res) => {
+    const result = await PersonDetails.find({username : "praveen k"}).select({email : 1}).limit(1)
+    console.log(result);
+})
+  rout.get("/gt", async(req,res) => {
+    const result = await Product.find({prize:{$gt : 50000}}).select({name : 1})
+    console.log(result)
+  })
+
+  rout.get("/gt", async(req,res) => {
+    const result = await Product.find({prize:{$gte : 50000}}).select({name : 1})
+    console.log(result)
+  })
+
+  rout.get("/gt", async(req,res) => {
+    const result = await Product.find({prize:{$lt : 50000}}).select({name : 1})
+    console.log(result)
+  })
+
+  rout.get("/gt", async(req,res) => {
+    const result = await Product.find({prize:{$lte : 50000}}).select({name : 1})
+    console.log(result)
+  })
+
+  rout.get("/gk1", async (req,res) => {
+    const result = await Product.find({name : "iphone"}).select({offerprize : 1}).limit(1)
+    console.log(result)
+  })
+
+
+  rout.get("/gk2", async (req,res) => {
+    const result = await Product.find({name : {$in : ["iphone"]}}).select({offerprize : 1},{prize : 1})
+    console.log(result)
+  })
+
+// Query Logical operators
+
+rout.get("/k", async(req,res) => {
+    const result = await Cart.find({$or : [{name : "iphone"} , {prize : "1,00,000"}]}).select({photo : 1})
+    console.log(result)
+  })
+
+  rout.get("/k1", async(req,res) => {
+    const result = await Cart.find({$and : [{name : "iphone"} , {prize : "1,00,000"}]}).select({photo : 1})
+    console.log(result)
+  })
+
+//Update Queries 
+
+rout.post("/up/:id" , async (req,res,next) => {
+    try{
+        const result = await PersonDetails.updateOne({_id : req.params.id},{
+            $set : {
+                username : req.body.username
+            }
+        })
+        console.log(result)
+    }catch(err){
+        console.log(err)
+    }
+})
+
 module.exports = rout;
