@@ -18,6 +18,7 @@ const Paymont = require('./paymont');
 const Address = require('./Address');
 const { count, find } = require('./Database');
 const Overall = require('./Overalldetail');
+const Form = require('./Form');
 
 
 rout.get("/dd", (req, res, next) => {
@@ -34,7 +35,6 @@ const Storage = multer.diskStorage({
     filename: (req, file, cb) => {
         cb(null, file.originalname);
     }
-
 });
 
 
@@ -1042,13 +1042,12 @@ rout.get("/g",async (req,res) => {
     console.log(result)
   })
 
-
   rout.get("/gk2", async (req,res) => {
     const result = await Product.find({name : {$in : ["iphone"]}}).select({offerprize : 1},{prize : 1})
     console.log(result)
   })
 
-// Query Logical operators
+// Query Logical o perators
 
 rout.get("/k", async(req,res) => {
     const result = await Cart.find({$or : [{name : "iphone"} , {prize : "1,00,000"}]}).select({photo : 1})
@@ -1074,5 +1073,60 @@ rout.post("/up/:id" , async (req,res,next) => {
         console.log(err)
     }
 })
+
+
+// form add
+
+
+rout.post("/addform",upload.single("image"), (req,res) => {
+    const username = req.body.username;
+    const name = req.body.name;
+    const url = req.body.url;
+    const image = req.file.path;
+    const select = req.body.select;
+
+
+    const newFormData = {
+        username,
+        name,
+        url,
+        image,
+        select
+    }
+
+    const newForm = new Form(newFormData);
+
+    newForm.save()
+    .then(() => res.json({
+        message: "Form added Successfully"
+    }))
+    .catch((err) => res.json("error" + err))
+})
+
+//form get Data
+
+rout.post("/formdata", async (req, res) => {
+    const HuserData = Form.find({ username: req.body.username }, async (err, data) => {
+        if (data) {
+            res.json(data)
+        } else {
+            res.json("Something Wrong")
+        }
+    })
+})
+
+
+//form Delete Data
+
+rout.post("/formdelete/:id", async (req, res) => {
+    try {
+        await Form.findByIdAndDelete(req.params.id);
+        res.status(200).json("Form has been deleted.");
+    } catch (err) {
+        console.log(err);
+    }
+})
+
+
 
 module.exports = rout;
