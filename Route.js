@@ -1006,7 +1006,7 @@ rout.get("/h2",async(req,res) => {
 })
 
 rout.get("/h3",async(req,res) => {
-    const result =await Cart.find({name : "toctoc"});
+    const result =await Cart.find({name : "jio"});
     res.json(result);
 })
 
@@ -1093,7 +1093,7 @@ rout.post("/addform",upload.single("image"), (req,res) => {
         image,
         select
     }
-
+ 
     const newForm = new Form(newFormData);
 
     newForm.save()
@@ -1126,6 +1126,27 @@ rout.post("/formdelete/:id", async (req, res) => {
         console.log(err);
     }
 })
+
+// update form
+
+rout.put("/formup/:id", upload.single("image"),(req, res, next) => {
+    Form.findByIdAndUpdate({ _id: req.params.id }, {
+        $set: {
+             name : req.body.name,
+             url : req.body.url,
+             image : req.body.path,
+             select : req.body.select,
+        }
+    }).then((result) => {
+        res.json({
+            message: "Form Updated successfully updateded"
+        })
+    }).catch((err) => {
+        res.json(err);
+    })
+})
+
+
 
 
 
