@@ -19,6 +19,7 @@ const Address = require('./Address');
 const { count, find } = require('./Database');
 const Overall = require('./Overalldetail');
 const Form = require('./Form');
+const Pro = require('./Photo');
 
 
 rout.get("/dd", (req, res, next) => {
@@ -1078,11 +1079,11 @@ rout.post("/up/:id" , async (req,res,next) => {
 // form add
 
 
-rout.post("/addform",upload.single("image"), (req,res) => {
+rout.post("/addform", (req,res) => {
     const username = req.body.username;
     const name = req.body.name;
     const url = req.body.url;
-    const image = req.file.path;
+    const image = "uploads/m2.jpg"
     const select = req.body.select;
 
 
@@ -1102,6 +1103,37 @@ rout.post("/addform",upload.single("image"), (req,res) => {
     }))
     .catch((err) => res.json("error" + err))
 })
+
+rout.post("/addform1",upload.single("image"), (req,res) => {
+    const username = req.body.username;
+    const image = req.file.path;
+
+    const newFormData = {
+        username,
+        image
+    }
+ 
+    const newForm = new Pro(newFormData);
+
+    newForm.save()
+    .then(() => res.json({
+        message: "Form added Successfully"
+    }))
+    .catch((err) => res.json("error" + err))
+})
+
+
+
+rout.post("/formdata1", async (req, res) => {
+    const HuserData = Pro.find({ username: req.body.username }, async (err, data) => {
+        if (data) {
+            res.json(data)
+        } else {
+            res.json("Something Wrong")
+        }
+    })
+})
+
 
 //form get Data
 
@@ -1127,6 +1159,7 @@ rout.post("/formdelete/:id", async (req, res) => {
     }
 })
 
+
 // update form
 
 rout.put("/formup/:id", upload.single("image"),(req, res, next) => {
@@ -1145,8 +1178,6 @@ rout.put("/formup/:id", upload.single("image"),(req, res, next) => {
         res.json(err);
     })
 })
-
-
 
 
 
