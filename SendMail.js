@@ -9,7 +9,7 @@ const sendEmail = async (email, subject, text) => {
             secure: true,
             auth: {
                 user: "praveenstark77@gmail.com",
-                pass: "sggmpzftxjezxzns",
+                pass: "qbqnpyfuaxrpbgrr",
             },
         });
 
